@@ -5,7 +5,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import InputAdornment from "@mui/material/InputAdornment";
 import logo from "../assets/로고.png";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 
@@ -54,23 +54,23 @@ export default function LoginPage() {
 
 
         //4. API 호출
-        axios.post("http://172.30.1.44:8080/auth/login", {username, password}, {withCredentials: true})
+        axiosInstance.post("/auth/login", {username, password})
         .then((response) => {
             //로그인 성공
 
-            //엑세스 토큰 파싱
+            // 엑세스 토큰 파싱
             const token = response.data.accessToken;
             if(!token) throw new Error("토큰 파싱 실패");
 
-            //로컬스토리지에 저장
+            // 로컬스토리지에 저장
             localStorage.setItem("token", token);
 
-            //리다이렉트 홈으로
+            // 리다이렉트 홈으로
             navigate("/", {replace: true});
         })
         .catch((error) => {
-
-            if(error.response?.status === 401){
+            // 이 부분은 인터셉터에서 이미 처리되므로 필요에 따라 제거 가능
+            if(error.response?.status === 401 && error.response?.data?.code === "A001"){
                 //로그인 실패
                 setShowAlet("아이디 또는 비밀번호가 일치하지 않습니다.");
                 setUsernameError(true);
@@ -79,12 +79,10 @@ export default function LoginPage() {
                 //그 외 오류
                 setShowAlet("일시적인 오류가 발생했습니다.")
             }
- 
         })
         .finally(() => {
             setIsLoading(false);
         })
-
 
     };
 

@@ -1,7 +1,15 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 
 export default function HomePage() {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login", {replace: true});
+    }
 
     return (
         <Box
@@ -16,7 +24,10 @@ export default function HomePage() {
                 overflow: 'hidden',
             }}
         >
-            <Typography>홈 화면</Typography>
+            <Box>
+                <Typography>홈 화면</Typography>
+            </Box>
+            <Button onClick={()=>handleLogout()}>로그아웃</Button>
 
         </Box>
     );
