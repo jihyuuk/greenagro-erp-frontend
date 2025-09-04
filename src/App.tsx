@@ -1,8 +1,8 @@
 import './App.css'
 import { ThemeProvider } from "@mui/material/styles";
 import theme from './theme'
-import LoginPage from './pages/LoginPage'
 import CssBaseline from "@mui/material/CssBaseline";
+import AppRoutes from './routes/AppRoutes';
 
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <LoginPage />
+      <AppRoutes />
     </ThemeProvider>
   );
 }
