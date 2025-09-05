@@ -1,91 +1,21 @@
-import React, { useState } from "react";
-import { Box, TextField, Button, Typography, Paper, FormControlLabel, Switch, CircularProgress, Alert } from "@mui/material";
+import { Box, TextField, Button, Typography, Paper, CircularProgress, Alert } from "@mui/material";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import InputAdornment from "@mui/material/InputAdornment";
 import logo from "../assets/로고.png";
-import axiosInstance from "../api/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useLoginForm } from "../hooks/useLoginForm";
 
 
 export default function LoginPage() {
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-    const [usernameError, setUsernameError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [showAlert, setShowAlet] = useState("");
-
-    const navigate = useNavigate();
-
-
-    // 로그인 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        //1. 로딩처리
-        setIsLoading(true);
-
-        //2. tirm
-        const usernameTrim = username.trim();
-        const passwordTrim = password.trim();
-
-        //3. 빈칸 검증
-        setUsernameError(false);
-        setPasswordError(false);
-
-        if (!usernameTrim || !passwordTrim) {
-
-            if (!usernameTrim) {
-                setUsernameError(true);
-            }
-
-            if (!passwordTrim) {
-                setPasswordError(true);
-            }
-
-            setIsLoading(false);
-            return;
-        }
-
-
-        //4. API 호출
-        axiosInstance.post("/auth/login", {username, password})
-        .then((response) => {
-            //로그인 성공
-
-            // 엑세스 토큰 파싱
-            const token = response.data.accessToken;
-            if(!token) throw new Error("토큰 파싱 실패");
-
-            // 로컬스토리지에 저장
-            localStorage.setItem("token", token);
-
-            // 리다이렉트 홈으로
-            navigate("/", {replace: true});
-        })
-        .catch((error) => {
-            // 이 부분은 인터셉터에서 이미 처리되므로 필요에 따라 제거 가능
-            if(error.response?.status === 401 && error.response?.data?.code === "A001"){
-                //로그인 실패
-                setShowAlet("아이디 또는 비밀번호가 일치하지 않습니다.");
-                setUsernameError(true);
-                setPasswordError(true);
-            }else{
-                //그 외 오류
-                setShowAlet("일시적인 오류가 발생했습니다.")
-            }
-        })
-        .finally(() => {
-            setIsLoading(false);
-        })
-
-    };
-
+    const {
+        username, 
+        password,
+        usernameError, passwordError,
+        isLoading, showAlert,
+        handleChange, handleLogin
+    } = useLoginForm(); 
 
 
 
@@ -175,11 +105,12 @@ export default function LoginPage() {
 
                     {/* 직원명 입력 필드 */}
                     <TextField
+                        name="username"
+                        value={username}
                         variant="outlined"
                         fullWidth
-                        value={username}
                         placeholder="직원명을 입력해주세요."
-                        onChange={(e) => setUsername(e.target.value.trim())}
+                        onChange={handleChange}
                         error={usernameError}
                         InputProps={{
                             startAdornment: (
@@ -194,11 +125,12 @@ export default function LoginPage() {
 
                     {/* 비밀번호 입력 필드 */}
                     <TextField
-                        fullWidth
+                        name="password"
                         type="password"
                         placeholder="비밀번호를 입력해주세요."
                         value={password}
-                        onChange={(e) => setPassword(e.target.value.trim())}
+                        fullWidth
+                        onChange={handleChange}
                         error={passwordError}
                         InputProps={{
                             startAdornment: (
