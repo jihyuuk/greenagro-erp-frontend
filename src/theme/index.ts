@@ -10,7 +10,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Inter", sans-serif',
+    fontFamily: 'SeoulNotice, "Inter", sans-serif',
   },
   components: {
     MuiButton: {

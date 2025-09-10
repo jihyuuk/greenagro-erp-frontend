@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: SeoulNotice, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -13,3 +13,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: 'SeoulNotice';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2505-1@1.0/SeoulAlrimTTF-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
