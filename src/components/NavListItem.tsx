@@ -1,19 +1,13 @@
 // src/components/SidebarMenuItem.tsx
-import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { ListItemButton, ListItemIcon, ListItemText, Collapse, List } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import type { NavItem } from '../config/NavList';
 
-interface MenuItem {
-    path: string;
-    label: string;
-    icon: ReactNode;
-    children?: MenuItem[];
-}
 
 interface SidebarMenuItemProps {
-    item: MenuItem;
+    item: NavItem;
 }
 
 
@@ -34,7 +28,7 @@ const SidebarMenuItem = ({ item }: SidebarMenuItemProps) => {
             component={Link}
             to={item.path}
             sx={{
-                pl: 2, 
+                pl: 2,
                 bgcolor: isActive ? 'grey.200' : 'inherit',
                 color: isActive ? 'black' : 'text.secondary',
                 '&:hover': {
@@ -81,7 +75,7 @@ const SidebarMenuItem = ({ item }: SidebarMenuItemProps) => {
                         <SidebarMenuItem key={child.path} item={child} />
                     ))}
                 </List>
-                
+
             </Collapse>
         </>
     );

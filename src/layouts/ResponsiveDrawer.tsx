@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { Box, Drawer, Toolbar, Divider, SwipeableDrawer } from "@mui/material";
-import Sidebar from "./Sidebar";
+import { Box, Drawer, Toolbar, Divider, SwipeableDrawer, List } from "@mui/material";
 import logo from "../assets/drawer_logo.png";
+import { navList } from '../config/NavList';
+import SidebarMenuItem from '../components/NavListItem';
+
 
 // 아이폰 최적화
 const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -14,12 +15,33 @@ interface ResponsiveDrawerProps {
 }
 
 
+//사이드바 내용 (공통)
+function DrawerContent({ onClose }: { onClose: () => void }) {
+    return (
+        <>
+            <Toolbar sx={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
+                <img src={logo} width={130} />
+            </Toolbar>
+
+            <Divider />
+
+            <List>
+                {navList.map((item) => (
+                        <SidebarMenuItem key={item.path} item={item} />
+                ))}
+            </List>
+        </>
+    );
+}
+
+
 export default function ResponsiveDrawer({ drawerWidth, open, openDrawer, closeDrawer }: ResponsiveDrawerProps) {
     return (
         <Box
             component="nav"
             sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         >
+
             {/* 모바일용 사이드바 */}
             <SwipeableDrawer
                 anchor="left"
@@ -33,34 +55,23 @@ export default function ResponsiveDrawer({ drawerWidth, open, openDrawer, closeD
                 disableBackdropTransition={!iOS}
                 disableDiscovery={iOS}
             >
-                <Toolbar sx={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
-                    <img src={logo} width={130} />
-                </Toolbar>
-
-                <Divider />
-
-                <Sidebar />
-
+                <DrawerContent onClose={closeDrawer} />
             </SwipeableDrawer>
 
+
             {/* 고정된 PC용 사이드바 */}
-            <Box
+            <Drawer
+                variant="permanent"
                 sx={{
-                    width: drawerWidth,
-                    overflowY: "auto",
-                    borderRight: 1,
-                    borderColor: 'divider',
-                    display: { xs: 'none', sm: 'block' }
+                    display: { xs: 'none', sm: 'block' },
+                    "& .MuiDrawer-paper": {
+                        width: drawerWidth,
+                    }
                 }}
             >
-                <Toolbar sx={{ display: "flex", justifyContent: "center", alignContent: "center", px: 1 }} disableGutters>
-                    <img src={logo} width={120} />
-                </Toolbar>
+                <DrawerContent onClose={closeDrawer} />
+            </Drawer>
 
-                <Divider />
-
-                <Sidebar />
-            </Box>
         </Box>
     );
 }
