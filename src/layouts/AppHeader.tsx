@@ -1,6 +1,8 @@
 import { AppBar, Toolbar, IconButton, Typography, Badge, Box } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useLocation } from 'react-router-dom';
+import { getPageTitle } from '../config/NavList';
 
 interface AppHeaderProps {
     drawerWidth: number;        //사이드바 넓이
@@ -8,6 +10,8 @@ interface AppHeaderProps {
 }
 
 export default function AppHeader({ drawerWidth, openDrawer }: AppHeaderProps) {
+    
+    const location = useLocation();
 
     return (
         <AppBar
@@ -32,7 +36,7 @@ export default function AppHeader({ drawerWidth, openDrawer }: AppHeaderProps) {
 
                 {/* 타이틀 */}
                 <Typography variant="h6" noWrap component="div">
-                    Responsive drawer
+                    {getPageTitle(location.pathname)}
                 </Typography>
 
 
